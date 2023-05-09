@@ -6,7 +6,7 @@
 
 ## Challenges solved
 
-Follow link for wrtie-up
+Follow link for write-up
 
 | Challenge | Category | Points | Date/Hour |
 | ------ | ------ | ------ | ------ |

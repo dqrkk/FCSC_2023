@@ -82,7 +82,7 @@ We must therefore find PHP fnv164 hash collisions.
 
 Searching for 'fnv164 collisions' on google, we find a site explaining that it is possible to generate collisions in hashes if the comparison between the 2 hashes uses == to compare them.
 
-It uses the trick that for PHP a string formated lkie '0+e[0-9]+' is evaluated as 0.
+It uses the trick that for PHP a string formated like '0+e[0-9]+' is evaluated as 0.
 
 So '0e1' == '00e2' == '0' == 0
 
@@ -130,7 +130,7 @@ foreach (generateStrings(1, 20)  as $salt) {
 }
 ```
 
-Let's laucnh it, we obtain:
+Let's launch it, we obtain:
 
 ```console
 dqrkk$ php salty.php
