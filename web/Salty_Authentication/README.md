@@ -1,5 +1,7 @@
 # Salty Authentication
-<img alt="Challenge" src="challenge.png" width=300>
+<p align="center">
+<img alt="Challenge" src="challenge.png">
+</p>
 
 When trying to access the given url, we get the following answer:
 ```php
@@ -29,6 +31,7 @@ highlight_file(__FILE__);
 ```
 
 The secret string is composed of the hostname of the machine concatenated with a random salt.
+
 The script checks if the "password" parameter was provided in the GET request and if it has the same length as the secret string. If these conditions are met, the hash function "fnv164" is applied to the secret string and the "password" parameter, and the two hashes are compared.
 
 Let's read the php doc of the [extract](https://www.php.net/manual/en/function.extract.php) function:
@@ -36,8 +39,10 @@ Let's read the php doc of the [extract](https://www.php.net/manual/en/function.e
 <img alt="Extract php function documentation" src="php_extract.png">
 
 With this function we can control a number of variables in the script.
+
 This allows us to submit, via a GET request, the $password and $salt parameters.
-First, we will try to know the length of the hostname returned by the gethostname() function. To do so, we just have to submit an empty $salt, and iterate on the length of $password until the message 'Wrong password!
+
+First, we will try to know the length of the hostname returned by the gethostname() function. To do so, we just have to submit an empty $salt, and iterate on the length of $password until the message 'Wrong password'
 
 ```console
 dqrkk$ for i in {1..100}; do response=$(curl -s "https://salty-authentication.france-cybersecurity-challenge.fr/?salt=&password=$(python -c 'print "A" * '$i'')") && [[ "$response" == *"Wrong password"* ]] && echo "Password length: $i"; sleep 2; done
@@ -45,10 +50,15 @@ Password length: 12
 ```
 
 The hostname has a length of 12 characters.
+
 In order to go further, we need to know the value of the hostname.
+
 For that, we will use a flaw in the script.
+
 Indeed, when the hashes don't match, the script displays the message "Wrong password!", but it also makes an exit($log_attack()).
+
 This gives us the possibility to call a function by controlling the value of $log_attack.
+
 We will send the string gethostname in the parameter, in order to make the script execute this function.
 
 ```console
@@ -69,11 +79,16 @@ hash('fnv164', $password) == hash('fnv164', $secret)
 ```
 
 We must therefore find PHP fnv164 hash collisions.
+
 Searching for 'fnv164 collisions' on google, we find a site explaining that it is possible to generate collisions in hashes if the comparison between the 2 hashes uses == to compare them.
+
 It uses the trick that for PHP a string formated lkie '0+e[0-9]+' is evaluated as 0.
+
 So '0e1' == '00e2' == '0' == 0
 
+
 We just need to find two different salt with the same length that generate a hash that match the previous format.
+
 The following script do the job:
 
 ```php
@@ -132,11 +147,16 @@ Salt: xQk50, Le hash 0e89676877126556 commence par '0e' suivi de chiffres.
 ```
 
 And that's it.
+
 Let's take the first two calculated values.
 
+
 $password will be 9be4a60f645f9iu10
+
 hash('fnv164', '9be4a60f645f9iu10') = '0e31697456461001'
+
 $secret will be 9be4a60f645fChI00
+
 hash('fnv164', '9be4a60f645fChI00') = '0e65994470693693'
 
 ```console
