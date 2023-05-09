@@ -31,31 +31,9 @@ highlight_file(__FILE__);
 The secret string is composed of the hostname of the machine concatenated with a random salt.
 The script checks if the "password" parameter was provided in the GET request and if it has the same length as the secret string. If these conditions are met, the hash function "fnv164" is applied to the secret string and the "password" parameter, and the two hashes are compared.
 
-Let's read the php doc of the extract function:
-<div class="refnamediv">
-  <h1 class="refname">extract</h1>
-  <p class="verinfo">(PHP 4, PHP 5, PHP 7, PHP 8)</p><p class="refpurpose"><span class="refname">extract</span> — <span class="dc-title">Import variables into the current symbol table from an array</span></p>
-</div>
-<div class="refsect1 description" id="refsect1-function.extract-description">
-  <h3 class="title">Description<a class="genanchor" href="#refsect1-function.extract-description"> ¶</a></h3>
-  <div class="methodsynopsis dc-description">
-   <span class="methodname"><strong>extract</strong></span>(<span class="methodparam"><span class="type">array</span> <code class="parameter reference">&amp;$array</code></span>, <span class="methodparam"><span class="type">int</span> <code class="parameter">$flags</code><span class="initializer"> = <strong><code>EXTR_OVERWRITE</code></strong></span></span>, <span class="methodparam"><span class="type">string</span> <code class="parameter">$prefix</code><span class="initializer"> = ""</span></span>): <span class="type">int</span></div>
+Let's read the php doc of the [extract](https://www.php.net/manual/en/function.extract.php) function:
 
-  <p class="para rdfs-comment">
-   Import variables from an array into the current symbol table.
-  </p>
-  <p class="para">
-   Checks each key to see whether it has a valid variable name. 
-   It also checks for collisions with existing variables in
-   the symbol table.
-  </p>
-  <div class="warning"><strong class="warning">Warning</strong>
-   <p class="para">
-    Do not use <span class="function"><strong>extract()</strong></span> on untrusted data, like user input
-    (e.g. <var class="varname"><a href="reserved.variables.get.php" class="classname">$_GET</a></var>, <var class="varname"><a href="reserved.variables.files.php" class="classname">$_FILES</a></var>).
-   </p>
-  </div>
- </div>
+<img alt="Extract php function documentation" src="php_extract.png">
 
 With this function we can control a number of variables in the script.
 This allows us to submit, via a GET request, the $password and $salt parameters.
